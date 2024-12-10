@@ -1,6 +1,13 @@
-.gradle
+# Build folders
 */build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/**/build/
 
-/.idea/
+# Gradle chache
+.gradle
+
+# Idea files
+.idea
+*.iml
+
+# Compiled files
+*.class
+*.log
