@@ -1,0 +1,571 @@
+openapi: 3.0.0
+info:
+  title: "ROM ${VERSION_APP}"
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/v1
+tags:
+  - name: model
+paths:
+  /model/create:
+    post:
+      tags:
+        - model
+      summary: Create model
+      operationId: createModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelCreateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelCreateResponse'
+  /model/read:
+    post:
+      tags:
+        - model
+      summary: Read model
+      operationId: readModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelReadRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelReadResponse'
+  /model/update:
+    post:
+      tags:
+        - model
+      summary: Update model
+      operationId: updateModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelUpdateRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelUpdateResponse'
+  /model/delete:
+    post:
+      tags:
+        - model
+      summary: Delete model
+      operationId: deleteModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelDeleteRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelDeleteResponse'
+  /model/search:
+    post:
+      tags:
+        - model
+      summary: Search model
+      operationId: searchModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelSearchRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelSearchResponse'
+  /model/train:
+    post:
+      tags:
+        - model
+      summary: Train model
+      operationId: trainModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelTrainRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelTrainResponse'
+  /model/predict:
+    post:
+      tags:
+        - model
+      summary: Predict model
+      operationId: predictModel
+      requestBody:
+        description: Request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelPredictRequest'
+        required: true
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelPredictResponse'
+
+components:
+  schemas:
+
+    IRequest:
+      type: object
+      description: Базовый интерфейс для всех запросов
+      properties:
+        requestType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+      discriminator:
+        propertyName: requestType
+        mapping:
+          create: '#/components/schemas/ModelCreateRequest'
+          read:   '#/components/schemas/ModelReadRequest'
+          update: '#/components/schemas/ModelUpdateRequest'
+          delete: '#/components/schemas/ModelDeleteRequest'
+          search: '#/components/schemas/ModelSearchRequest'
+          train: '#/components/schemas/ModelTrainRequest'
+          predict: '#/components/schemas/ModelPredictRequest'
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        group:
+          type: string
+        field:
+          type: string
+        message:
+          type: string
+
+    ResponseResult:
+      type: string
+      enum:
+        - success
+        - error
+
+    IResponse:
+      type: object
+      description: Базовый интерфейс для всех ответов
+      properties:
+        responseType:
+          type: string
+          description: Поле-дескриминатор для вычисления типа запроса
+          example: create
+        result:
+          $ref: '#/components/schemas/ResponseResult'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+      discriminator:
+        propertyName: responseType
+        mapping:
+          create: '#/components/schemas/ModelCreateResponse'
+          read:   '#/components/schemas/ModelReadResponse'
+          update: '#/components/schemas/ModelUpdateResponse'
+          delete: '#/components/schemas/ModelDeleteResponse'
+          search: '#/components/schemas/ModelSearchResponse'
+          train: '#/components/schemas/ModelTrainResponse'
+          predict: '#/components/schemas/ModelPredictResponse'
+
+    UserId:
+      type: string
+      description: Идентификатор пользователя
+
+    ModelId:
+      type: string
+      description: Идентификатор модели
+
+    ParamId:
+      type: string
+      description: Идентификатор параметра
+
+    ModelLock:
+      type: string
+      description: Версия оптимистичной блокировки
+
+    BaseModel:
+      type: object
+      description: Объект описывает свойства, одинаковые для create и update
+      properties:
+        name:
+          type: string
+          description: Имя модели
+        macroPath:
+          type: string
+          description: Макрос для расчета модели
+        solverPath:
+          type: string
+          description: Solver path
+        params:
+          type: array
+          description: Массив параметров в макросе
+          items:
+            $ref: '#/components/schemas/BaseParam'
+        sampling:
+          $ref: '#/components/schemas/ModelSampling'
+        visibility:
+          $ref: '#/components/schemas/ModelVisibility'
+
+    BaseParam:
+      type: object
+      properties:
+        line:
+          type: integer
+          description: Строка макроса, в которой встречается параметр (нумерация начинается с 1)
+        position:
+          type: integer
+          description: Позиция параметра в соответствующей строке (нумерация начинается с 1)
+        separator:
+          type: string
+          description: Разделитель строки
+        name:
+          type: string
+          description: Имя параметра
+        units:
+          type: string
+          description: Единицы измерения
+        bounds:
+          type: array
+          items:
+            type: number
+            format: double
+
+    ModelSampling:
+      type: string
+      description: 'Тип сэмплинга ROM. Возможные значения: латинский гиперкуб, адаптивный сэмплинг'
+      enum:
+        - latinHyperCube
+        - adaptiveSampling
+
+    ModelVisibility:
+      type: string
+      description: 'Тип видимости модели. Возможные значения: видит только владелец, только зарегистрированный в системе пользователь, видима всем'
+      enum:
+        - ownerOnly
+        - registeredOnly
+        - public
+
+    ModelCreateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseModel'
+
+    ModelCreateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelCreateObject'
+
+    ModelReadObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+
+    ModelReadRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelReadObject'
+
+    ModelUpdateObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseModel'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+            lock:
+              $ref: '#/components/schemas/ModelLock'
+
+    ModelUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelUpdateObject'
+
+    ModelDeleteObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+            lock:
+              $ref: '#/components/schemas/ModelLock'
+
+    ModelDeleteRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelDeleteObject'
+
+    ModelSearchFilter:
+      type: object
+      description: Набор фильтров для поиска
+      properties:
+        searchString:
+          type: string
+          description: Поисковая строка, которая будет искаться среди имен моделей
+
+    ModelSearchRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            modelFilter:
+              $ref: '#/components/schemas/ModelSearchFilter'
+
+    ModelTrainObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+
+    ModelTrainRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelTrainObject'
+
+    ModelPredictObject:
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+            paramValues:
+              type: array
+              items:
+                type: number
+                format: double
+
+    ModelPredictRequest:
+      allOf:
+        - $ref: '#/components/schemas/IRequest'
+        - $ref: '#/components/schemas/ModelRequestDebug'
+        - type: object
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelPredictObject'
+
+    ParamResponseObject:
+      allOf:
+        - $ref: '#/components/schemas/BaseParam'
+        - type: object
+          description: Параметр, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/ParamId'
+            modelId:
+              $ref: '#/components/schemas/ModelId'
+
+    ModelResponseObject:
+      allOf:
+        - type: object
+          description: Объект, который возвращается в ответе бэкенда
+          properties:
+            id:
+              $ref: '#/components/schemas/ModelId'
+            ownerId:
+              $ref: '#/components/schemas/UserId'
+            lock:
+              $ref: '#/components/schemas/ModelLock'
+            permissions:
+              type: array
+              uniqueItems: true
+              items:
+                $ref: '#/components/schemas/ModelPermissions'
+            field:
+              type: array
+              items:
+                type: number
+                format: double
+            name:
+              type: string
+              description: Имя модели
+            macroPath:
+              type: string
+              description: Макрос для расчета модели
+            solverPath:
+              type: string
+              description: Solver path
+            params:
+              type: array
+              description: Массив параметров в макросе
+              items:
+                $ref: '#/components/schemas/ParamResponseObject'
+            sampling:
+              $ref: '#/components/schemas/ModelSampling'
+            visibility:
+              $ref: '#/components/schemas/ModelVisibility'
+            paramValues:
+              type: array
+              items:
+                type: number
+                format: double
+
+    ModelPermissions:
+      type: string
+      description: Доступы для клиента для операций над объявлением
+      enum:
+        - read
+        - update
+        - delete
+        - makeVisiblePublic
+        - makeVisibleOwn
+        - makeVisibleGroup
+
+    ModelResponseSingle:
+      allOf:
+        - type: object
+          description: Ответ с одним объектом объявления
+          properties:
+            model:
+              $ref: '#/components/schemas/ModelResponseObject'
+
+    ModelResponseMulti:
+      allOf:
+        - type: object
+          description: Список найденных объектов
+          properties:
+            models:
+              type: array
+              items:
+                $ref: '#/components/schemas/ModelResponseObject'
+
+    ModelCreateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    ModelReadResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    ModelUpdateResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    ModelDeleteResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    ModelSearchResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseMulti'
+
+    ModelTrainResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    ModelPredictResponse:
+      allOf:
+        - $ref: '#/components/schemas/IResponse'
+        - $ref: '#/components/schemas/ModelResponseSingle'
+
+    # STUBS ======================
+    ModelRequestDebugMode:
+      type: string
+      enum:
+        - prod
+        - test
+        - stub
+
+    ModelRequestDebug:
+      type: object
+      properties:
+        debug:
+          $ref: '#/components/schemas/ModelDebug'
+
+    ModelDebug:
+      type: object
+      properties:
+        mode:
+          $ref: '#/components/schemas/ModelRequestDebugMode'
+        stub:
+          $ref: '#/components/schemas/ModelRequestDebugStubs'
+
+    ModelRequestDebugStubs:
+      type: string
+      description: Перечисления всех стабов
+      enum:
+        - success
+        - notFound
+        - badId
+        - badTitle
+        - badDescription
+        - badVisibility
+        - cannotDelete
+        - badSearchString
