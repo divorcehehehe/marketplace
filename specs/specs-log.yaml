@@ -1,0 +1,141 @@
+openapi: 3.0.0
+info:
+  title: ROM log schemas
+  description: Schemas for logging services of ROM
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+paths: {}
+components:
+  schemas:
+    CommonLogSchema:
+      title: Общая схема лога
+      description: Общая схема лога для всех микросервисов системы
+      type: object
+      properties:
+        messageTime:
+          type: string
+        logId:
+          type: string
+        source:
+          type: string
+        model:
+          $ref: '#/components/schemas/ModelLogSchema'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorLogSchema'
+
+    ModelLogSchema:
+      title: Схема лога для микросервиса rom
+      type: object
+      properties:
+        requestId:
+          type: string
+        operation:
+          type: string
+          enum:
+            - create
+            - read
+            - update
+            - delete
+            - search
+            - train
+            - predict
+            - init
+            - finish
+        requestModel:
+          $ref: '#/components/schemas/ModelLog'
+        requestFilter:
+          $ref: '#/components/schemas/ModelFilterLog'
+        responseModel:
+          $ref: '#/components/schemas/ModelLog'
+        responseModels:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelLog'
+
+    ErrorLogSchema:
+      title: Схема лога для ошибки
+      type: object
+      properties:
+        message:
+          type: string
+        field:
+          type: string
+        code:
+          type: string
+        level:
+          type: string
+
+    ModelLog:
+      title: Схема лога для модели
+      type: object
+      properties:
+        id:
+          type: string
+        ownerId:
+          type: string
+        permissions:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        field:
+          type: array
+          items:
+            type: number
+            format: double
+        name:
+          type: string
+        macroPath:
+          type: string
+        solverPath:
+          type: string
+          description: Solver path
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParamLog'
+        sampling:
+          type: string
+        visibility:
+          type: string
+        paramValues:
+          type: array
+          items:
+            type: number
+            format: double
+
+    ParamLog:
+      title: Схема лога для параметра
+      type: object
+      properties:
+        id:
+          type: string
+        modelId:
+          type: string
+        line:
+          type: integer
+        position:
+          type: integer
+        separator:
+          type: string
+        name:
+          type: string
+        units:
+          type: string
+        bounds:
+          type: array
+          items:
+            type: number
+            format: double
+
+    ModelFilterLog:
+      title: Модель лога фильтра
+      properties:
+        searchString:
+          type: string
+        ownerId:
+          type: string

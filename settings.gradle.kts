@@ -5,3 +5,4 @@ rootProject.name = "marketplace"
 
 includeBuild("lessons")
 includeBuild("rom")
+includeBuild("libs")
