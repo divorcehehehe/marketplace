@@ -9,6 +9,48 @@ import kotlin.test.assertEquals
 
 class MapperUpdateTest {
     @Test
+    fun fromTransportInvalidParamLine() {
+        val request = ModelUpdateRequest(
+            debug = ModelDebug(),
+            model = ModelUpdateObject(
+                params = listOf(
+                    BaseParam(
+                        line = 0,
+                    ),
+                ),
+            ),
+        )
+
+        val context = Context()
+        try {
+            context.fromTransport(request)
+        } catch (exception: Throwable) {
+            assertEquals("InvalidParamLine", exception::class.simpleName)
+        }
+    }
+
+    @Test
+    fun fromTransportInvalidParamPosition() {
+        val request = ModelUpdateRequest(
+            debug = ModelDebug(),
+            model = ModelUpdateObject(
+                params = listOf(
+                    BaseParam(
+                        position = 0,
+                    ),
+                ),
+            ),
+        )
+
+        val context = Context()
+        try {
+            context.fromTransport(request)
+        } catch (exception: Throwable) {
+            assertEquals("InvalidParamPosition", exception::class.simpleName)
+        }
+    }
+
+    @Test
     fun fromTransport() {
         val request = ModelUpdateRequest(
             debug = ModelDebug(
