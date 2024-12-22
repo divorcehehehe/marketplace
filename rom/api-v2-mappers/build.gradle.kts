@@ -1,14 +1,30 @@
 plugins {
-    id("build-jvm")
+    id("build-kmp")
 }
 
 group = rootProject.group
 version = rootProject.version
 
-dependencies {
-    implementation(kotlin("stdlib"))
-    implementation(project(":api-v2-kmp"))
-    implementation(project(":common"))
-
-    testImplementation(kotlin("test-junit"))
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            kotlin.srcDirs(layout.buildDirectory.dir("generate-resources/src/commonMain/kotlin"))
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+                implementation(project(":api-v2-kmp"))
+                implementation(project(":common"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+            }
+        }
+    }
 }

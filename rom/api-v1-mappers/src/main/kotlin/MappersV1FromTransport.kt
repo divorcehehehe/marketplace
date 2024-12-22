@@ -123,13 +123,6 @@ private fun ModelCreateObject.toInternal(): Model = Model(
     visibility = this.visibility.fromTransport(),
 )
 
-private fun BaseParam.validate(): BaseParam {
-    this.position?.let { if (it < 1) throw InvalidParamPosition(this) }
-    this.line?.let { if (it < 1) throw InvalidParamLine(this) }
-
-    return this
-}
-
 private fun ModelUpdateObject.toInternal(): Model = Model(
     name = this.name ?: "",
     macroPath = this.macroPath ?: "",
@@ -140,6 +133,13 @@ private fun ModelUpdateObject.toInternal(): Model = Model(
     id = this.id.toModelId(),
     lock = lock.toModelLock(),
 )
+
+private fun BaseParam.validate(): BaseParam {
+    this.position?.let { if (it < 1) throw InvalidParamPosition(this) }
+    this.line?.let { if (it < 1) throw InvalidParamLine(this) }
+
+    return this
+}
 
 private fun BaseParam.toInternal(): Param = Param(
     line = this.line ?: 0,

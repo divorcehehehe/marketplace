@@ -1,3 +1,5 @@
+rootProject.name = "rom"
+
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
@@ -18,14 +20,22 @@ pluginManagement {
     }
 }
 
-rootProject.name = "rom"
-
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
-include(":common")
 include(":api-v1-jackson")
 include(":api-v1-mappers")
 include(":api-v2-kmp")
 include(":api-v2-mappers")
+
+include(":api-log")
+
+include(":common")
+include(":biz")
+include(":stubs")
+
+include(":app-common")
+include(":app-tmp")
+include(":app-spring")
+include(":app-rabbit")
