@@ -304,6 +304,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelCreateObject'
 
@@ -320,6 +322,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelReadObject'
 
@@ -339,6 +343,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelUpdateObject'
 
@@ -357,6 +363,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelDeleteObject'
 
@@ -374,6 +382,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             modelFilter:
               $ref: '#/components/schemas/ModelSearchFilter'
 
@@ -383,6 +393,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/ModelId'
+            lock:
+              $ref: '#/components/schemas/ModelLock'
 
     ModelTrainRequest:
       allOf:
@@ -390,6 +402,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelTrainObject'
 
@@ -399,6 +413,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/ModelId'
+            lock:
+              $ref: '#/components/schemas/ModelLock'
             paramValues:
               type: array
               items:
@@ -411,6 +427,8 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelPredictObject'
 
@@ -563,8 +581,20 @@ components:
         - success
         - notFound
         - badId
-        - badTitle
-        - badDescription
+        - badLock
+        - badName
+        - badMacroPath
+        - badSolverPath
+        - badParamLine
+        - badParamPosition
+        - badParamSeparator
+        - badParamName
+        - badParamUnits
+        - badParamBounds
+        - badSampling
         - badVisibility
         - cannotDelete
+        - cannotUpdate
         - badSearchString
+        - badParamValues
+        - dbError
