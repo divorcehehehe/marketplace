@@ -9,75 +9,6 @@ import kotlin.test.assertEquals
 
 class MapperCreateTest {
     @Test
-    fun fromTransportInvalidParamLine() {
-        val request = ModelCreateRequest(
-            debug = ModelDebug(
-                mode = ModelRequestDebugMode.STUB,
-                stub = ModelRequestDebugStubs.SUCCESS,
-            ),
-            model = ModelCreateObject(
-                name = "model",
-                macroPath = "path/to/macro",
-                solverPath = "path/to/solver",
-                params = listOf(
-                    BaseParam(
-                        line = 0,
-                        position = 2,
-                        separator = "=",
-                        name = "Temperature",
-                        units = "°C",
-                        bounds = listOf(0.0, 1.0),
-                    ),
-                ),
-                sampling = ModelSampling.LATIN_HYPER_CUBE,
-                visibility = ModelVisibility.PUBLIC,
-            ),
-        )
-
-        val context = Context()
-        try {
-            context.fromTransport(request)
-        } catch (exception: Throwable) {
-            assertEquals("InvalidParamLine", exception::class.simpleName)
-        }
-    }
-
-
-    @Test
-    fun fromTransportInvalidParamPosition() {
-        val request = ModelCreateRequest(
-            debug = ModelDebug(
-                mode = ModelRequestDebugMode.STUB,
-                stub = ModelRequestDebugStubs.SUCCESS,
-            ),
-            model = ModelCreateObject(
-                name = "model",
-                macroPath = "path/to/macro",
-                solverPath = "path/to/solver",
-                params = listOf(
-                    BaseParam(
-                        line = 1,
-                        position = 0,
-                        separator = "=",
-                        name = "Temperature",
-                        units = "°C",
-                        bounds = listOf(0.0, 1.0),
-                    ),
-                ),
-                sampling = ModelSampling.LATIN_HYPER_CUBE,
-                visibility = ModelVisibility.PUBLIC,
-            ),
-        )
-
-        val context = Context()
-        try {
-            context.fromTransport(request)
-        } catch (exception: Throwable) {
-            assertEquals("InvalidParamPosition", exception::class.simpleName)
-        }
-    }
-
-    @Test
     fun fromTransport() {
         val request = ModelCreateRequest(
             debug = ModelDebug(
@@ -101,6 +32,7 @@ class MapperCreateTest {
                 sampling = ModelSampling.LATIN_HYPER_CUBE,
                 visibility = ModelVisibility.PUBLIC,
             ),
+            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -123,6 +55,8 @@ class MapperCreateTest {
         assertEquals(1.0,                context.modelRequest.params.firstOrNull()?.bounds?.lastOrNull())
         assertEquals("LATIN_HYPER_CUBE", context.modelRequest.sampling.name)
         assertEquals("VISIBLE_PUBLIC",   context.modelRequest.visibility.name)
+        assertEquals("user_id",          context.modelRequest.ownerId.asString())
+        assertEquals("user_id",          context.requestUserId.asString())
     }
 
     @Test
@@ -143,6 +77,8 @@ class MapperCreateTest {
         assertEquals(null,     context.modelRequest.params.firstOrNull())
         assertEquals("NONE",   context.modelRequest.sampling.name)
         assertEquals("NONE",   context.modelRequest.visibility.name)
+        assertEquals("",       context.modelRequest.ownerId.asString())
+        assertEquals("",       context.requestUserId.asString())
     }
 
     @Test

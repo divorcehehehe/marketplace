@@ -19,6 +19,7 @@ class MapperDeleteTest {
                 id = "model_id",
                 lock = "model_lock"
             ),
+            requestUserId = "user_id",
         )
 
         val context = Context()
@@ -37,6 +38,7 @@ class MapperDeleteTest {
         assertEquals(null,         context.modelRequest.params.firstOrNull())
         assertEquals("NONE",       context.modelRequest.sampling.name)
         assertEquals("NONE",       context.modelRequest.visibility.name)
+        assertEquals("user_id",    context.requestUserId.asString())
     }
 
     @Test
@@ -59,6 +61,7 @@ class MapperDeleteTest {
         assertEquals(null,     context.modelRequest.params.firstOrNull())
         assertEquals("NONE",   context.modelRequest.sampling.name)
         assertEquals("NONE",   context.modelRequest.visibility.name)
+        assertEquals("",       context.requestUserId.asString())
     }
 
     @Test

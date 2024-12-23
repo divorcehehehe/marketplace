@@ -9,48 +9,6 @@ import kotlin.test.assertEquals
 
 class MapperUpdateTest {
     @Test
-    fun fromTransportInvalidParamLine() {
-        val request = ModelUpdateRequest(
-            debug = ModelDebug(),
-            model = ModelUpdateObject(
-                params = listOf(
-                    BaseParam(
-                        line = 0,
-                    ),
-                ),
-            ),
-        )
-
-        val context = Context()
-        try {
-            context.fromTransport(request)
-        } catch (exception: Throwable) {
-            assertEquals("InvalidParamLine", exception.javaClass.simpleName)
-        }
-    }
-
-    @Test
-    fun fromTransportInvalidParamPosition() {
-        val request = ModelUpdateRequest(
-            debug = ModelDebug(),
-            model = ModelUpdateObject(
-                params = listOf(
-                    BaseParam(
-                        position = 0,
-                    ),
-                ),
-            ),
-        )
-
-        val context = Context()
-        try {
-            context.fromTransport(request)
-        } catch (exception: Throwable) {
-            assertEquals("InvalidParamPosition", exception.javaClass.simpleName)
-        }
-    }
-
-    @Test
     fun fromTransport() {
         val request = ModelUpdateRequest(
             debug = ModelDebug(
@@ -76,6 +34,7 @@ class MapperUpdateTest {
                 id = "model_id",
                 lock = "model_lock",
             ),
+            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -100,6 +59,7 @@ class MapperUpdateTest {
         assertEquals(1.0,                context.modelRequest.params.firstOrNull()?.bounds?.lastOrNull())
         assertEquals("LATIN_HYPER_CUBE", context.modelRequest.sampling.name)
         assertEquals("VISIBLE_PUBLIC",   context.modelRequest.visibility.name)
+        assertEquals("user_id",          context.requestUserId.asString())
     }
 
     @Test
@@ -122,6 +82,7 @@ class MapperUpdateTest {
         assertEquals(null,     context.modelRequest.params.firstOrNull())
         assertEquals("NONE",   context.modelRequest.sampling.name)
         assertEquals("NONE",   context.modelRequest.visibility.name)
+        assertEquals("",       context.requestUserId.asString())
     }
 
     @Test

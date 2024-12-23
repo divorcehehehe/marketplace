@@ -9,7 +9,7 @@ class RequestV1SerializationTest {
     private val request = ModelCreateRequest(
         debug = ModelDebug(
             mode = ModelRequestDebugMode.STUB,
-            stub = ModelRequestDebugStubs.BAD_TITLE
+            stub = ModelRequestDebugStubs.BAD_NAME
         ),
         model = ModelCreateObject(
             name = "model",
@@ -40,7 +40,7 @@ class RequestV1SerializationTest {
         assertContains(json, "\"sampling\":\"latinHyperCube\"")
         assertContains(json, "\"requestType\":\"create\"")
         assertContains(json, "\"mode\":\"stub\"")
-        assertContains(json, "\"stub\":\"badTitle\"")
+        assertContains(json, "\"stub\":\"badName\"")
     }
 
     @Test
