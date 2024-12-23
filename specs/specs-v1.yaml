@@ -563,8 +563,18 @@ components:
         - success
         - notFound
         - badId
-        - badTitle
-        - badDescription
+        - badName
+        - badMacroPath
+        - badSolverPath
+        - badParamLine
+        - badParamPosition
+        - badParamSeparator
+        - badParamName
+        - badParamUnits
+        - badParamBounds
+        - badSampling
         - badVisibility
         - cannotDelete
         - badSearchString
+        - badParamValues
+        - dbError

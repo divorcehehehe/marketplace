@@ -24,5 +24,6 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "0.5.0"
 }
 
+include(":lib-cor")
 include(":lib-logging-common")
 include(":lib-logging-logback")
