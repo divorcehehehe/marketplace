@@ -1,6 +1,7 @@
 package rom.common.models
 
 data class Param(
+    var corSettings: ParamCorSettings = ParamCorSettings(),
     var line: Int = 0,
     var position: Int = 0,
     var separator: String = "",
