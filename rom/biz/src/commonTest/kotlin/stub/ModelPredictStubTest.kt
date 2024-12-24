@@ -13,6 +13,7 @@ class ModelPredictStubTest {
 
     private val processor = ModelProcessor()
     private val id = ModelId("666")
+    private val lock = ModelLock("666")
     private val paramValues = arrayOf(0.5)
 
     @Test
@@ -25,13 +26,13 @@ class ModelPredictStubTest {
             stubCase = Stubs.SUCCESS,
             modelRequest = Model(
                 id = id,
+                lock = lock,
                 paramValues = paramValues,
             ),
         )
         processor.exec(ctx)
 
         with (ModelStub.get()) {
-            assertEquals(id,                ctx.modelResponse.id)
             assertEquals(ownerId,           ctx.modelResponse.ownerId)
             assertEquals(permissionsClient, ctx.modelResponse.permissionsClient)
             assertEquals(name,              ctx.modelResponse.name)
@@ -41,6 +42,8 @@ class ModelPredictStubTest {
             assertEquals(sampling,          ctx.modelResponse.sampling)
             assertEquals(visibility,        ctx.modelResponse.visibility)
         }
+        assertEquals(id,          ctx.modelResponse.id)
+        assertEquals(lock,        ctx.modelResponse.lock)
         assertEquals(paramValues, ctx.modelResponse.paramValues)
     }
 
@@ -58,6 +61,23 @@ class ModelPredictStubTest {
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("id",         ctx.errors.firstOrNull()?.field)
+        assertEquals("validation", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun badLock() = runTest {
+        val ctx = Context(
+            command = Command.PREDICT,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.BAD_LOCK,
+            modelRequest = Model(
+                paramValues = paramValues,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),               ctx.modelResponse)
+        assertEquals("lock",       ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
     }
 

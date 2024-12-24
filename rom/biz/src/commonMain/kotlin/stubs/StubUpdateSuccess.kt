@@ -21,6 +21,7 @@ fun ICorChainDsl<Context>.stubUpdateSuccess(title: String, corSettings: CorSetti
             state = State.FINISHING
             val stub = ModelStub.prepareResult {
                 modelRequest.id.takeIf { it != ModelId.NONE }?.also { this.id = it }
+                modelRequest.lock.takeIf { it != ModelLock.NONE }?.also { this.lock = it }
                 modelRequest.name.takeIf { it.isNotBlank() }?.also { this.name = it }
                 modelRequest.macroPath.takeIf { it.isNotBlank() }?.also { this.macroPath = it }
                 modelRequest.solverPath.takeIf { it.isNotBlank() }?.also { this.solverPath = it }
@@ -34,10 +35,10 @@ fun ICorChainDsl<Context>.stubUpdateSuccess(title: String, corSettings: CorSetti
 }
 
 private fun MutableList<Param>.validate(): MutableList<Param> = this.filter {
-        param -> param.line != 0 ||
-        param.position != 0 ||
-        param.separator.isNotBlank() ||
-        param.name.isNotBlank() ||
-        param.units.isNotBlank() ||
+        param -> param.line != 0 &&
+        param.position != 0 &&
+        param.separator.isNotBlank() &&
+        param.name.isNotBlank() &&
+        param.units.isNotBlank() &&
         param.bounds.isNotEmpty()
 }.toMutableList()

@@ -1,13 +1,17 @@
 package rom.biz
 
+import marketplace.cor.rootChain
+import marketplace.cor.worker
 import rom.biz.general.initStatus
 import rom.biz.general.operation
 import rom.biz.general.stubs
 import rom.biz.stubs.*
+import rom.biz.validation.*
 import rom.common.Context
 import rom.common.CorSettings
 import rom.common.models.Command
-import marketplace.cor.rootChain
+import rom.common.models.ModelId
+import rom.common.models.ModelLock
 
 class ModelProcessor(
     private val corSettings: CorSettings = CorSettings.NONE
@@ -32,6 +36,29 @@ class ModelProcessor(
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+                worker("Очистка поля name") { modelValidating.name = modelValidating.name.trim() }
+                worker("Очистка поля macroPath") { modelValidating.macroPath = modelValidating.macroPath.trim() }
+                worker("Очистка поля solverPath") { modelValidating.solverPath = modelValidating.solverPath.trim() }
+
+                validateNameNotEmpty("Проверка наличия поля name")
+                validateNameHasContent(      "Проверка поля name")
+
+                validateMacroPathNotEmpty("Проверка наличия поля macroPath")
+                validateMacroPathHasContent(      "Проверка поля macroPath")
+
+                validateSolverPathNotEmpty("Проверка наличия поля solverPath")
+                validateSolverPathHasContent(      "Проверка поля solverPath")
+
+                validateParamsNotEmpty("Проверка наличия поля params")
+                validateParamsHasContent(      "Проверка поля params")
+
+                finishModelValidation("Завершение проверок")
+            }
         }
 
         operation("Получить модель", Command.READ) {
@@ -41,12 +68,24 @@ class ModelProcessor(
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+
+                validateIdNotEmpty("Проверка наличия поля id")
+                validateIdProperFormat(    "Проверка поля id")
+
+                finishModelValidation("Завершение проверок")
+            }
         }
 
         operation("Изменить модель", Command.UPDATE) {
             stubs("Обработка стабов") {
                 stubUpdateSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
+                stubValidationBadLock("Имитация ошибки валидации блокировки")
                 stubValidationBadName("Имитация ошибки валидации имени модели")
                 stubValidationBadMacroPath("Имитация ошибки валидации пути к макросу")
                 stubValidationBadSolverPath("Имитация ошибки валидации пути к солверу")
@@ -61,14 +100,60 @@ class ModelProcessor(
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+                worker("Очистка поля lock") { modelValidating.lock = ModelLock(modelValidating.lock.asString().trim()) }
+                worker("Очистка поля name") { modelValidating.name = modelValidating.name.trim() }
+                worker("Очистка поля macroPath") { modelValidating.macroPath = modelValidating.macroPath.trim() }
+                worker("Очистка поля solverPath") { modelValidating.solverPath = modelValidating.solverPath.trim() }
+
+                validateIdNotEmpty("Проверка наличия поля id")
+                validateIdProperFormat(    "Проверка поля id")
+
+                validateLockNotEmpty("Проверка наличия поля lock")
+                validateLockProperFormat(    "Проверка поля lock")
+
+                validateNameNotEmpty("Проверка наличия поля name")
+                validateNameHasContent(      "Проверка поля name")
+
+                validateMacroPathNotEmpty("Проверка наличия поля macroPath")
+                validateMacroPathHasContent(      "Проверка поля macroPath")
+
+                validateSolverPathNotEmpty("Проверка наличия поля solverPath")
+                validateSolverPathHasContent(      "Проверка поля solverPath")
+
+                validateParamsNotEmpty("Проверка наличия поля params")
+                validateParamsHasContent(      "Проверка поля params")
+
+                finishModelValidation("Завершение проверок")
+            }
         }
 
         operation("Удалить модель", Command.DELETE) {
             stubs("Обработка стабов") {
                 stubDeleteSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
+                stubValidationBadLock("Имитация ошибки валидации блокировки")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
+            }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+                worker("Очистка поля lock") { modelValidating.lock = ModelLock(modelValidating.lock.asString().trim()) }
+
+                validateIdNotEmpty("Проверка наличия поля id")
+                validateIdProperFormat(    "Проверка поля id")
+
+                validateLockNotEmpty("Проверка наличия поля lock")
+                validateLockProperFormat(    "Проверка поля lock")
+
+                finishModelValidation("Завершение проверок")
             }
         }
 
@@ -79,14 +164,39 @@ class ModelProcessor(
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
+
+            validation {
+                worker("Копируем поля в modelFilterValidating") {
+                    modelFilterValidating = modelFilterRequest.deepCopy()
+                }
+
+                validateSearchStringLength("Валидация длины строки поиска в фильтре")
+                finishModelFilterValidation("Завершение проверок")
+            }
         }
 
         operation("Обучить модель", Command.TRAIN) {
             stubs("Обработка стабов") {
                 stubTrainSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
+                stubValidationBadLock("Имитация ошибки валидации блокировки")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
+            }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+                worker("Очистка поля lock") { modelValidating.lock = ModelLock(modelValidating.lock.asString().trim()) }
+
+                validateIdNotEmpty("Проверка наличия поля id")
+                validateIdProperFormat(    "Проверка поля id")
+
+                validateLockNotEmpty("Проверка наличия поля lock")
+                validateLockProperFormat(    "Проверка поля lock")
+
+                finishModelValidation("Завершение проверок")
             }
         }
 
@@ -94,9 +204,28 @@ class ModelProcessor(
             stubs("Обработка стабов") {
                 stubPredictSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
+                stubValidationBadLock("Имитация ошибки валидации блокировки")
                 stubValidationBadParamValues("Имитация ошибки валидации значений параметров")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
+            }
+
+            validation {
+                worker("Копируем поля в modelValidating") { modelValidating = modelRequest.deepCopy() }
+
+                worker("Очистка id") { modelValidating.id = ModelId(modelValidating.id.asString().trim()) }
+                worker("Очистка поля lock") { modelValidating.lock = ModelLock(modelValidating.lock.asString().trim()) }
+
+                validateIdNotEmpty("Проверка наличия поля id")
+                validateIdProperFormat(    "Проверка поля id")
+
+                validateLockNotEmpty("Проверка наличия поля lock")
+                validateLockProperFormat(    "Проверка поля lock")
+
+                validateParamValuesSize(             "Проверка размера списка paramValues")
+                validateParamValuesProperContent("Проверка содержимого списка paramValues")
+
+                finishModelValidation("Завершение проверок")
             }
         }
     }.build()

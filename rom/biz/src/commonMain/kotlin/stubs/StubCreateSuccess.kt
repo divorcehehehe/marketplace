@@ -36,10 +36,10 @@ fun ICorChainDsl<Context>.stubCreateSuccess(title: String, corSettings: CorSetti
 }
 
 private fun MutableList<Param>.validate(): MutableList<Param> = this.filter {
-    param -> param.line != 0 ||
-        param.position != 0 ||
-        param.separator.isNotBlank() ||
-        param.name.isNotBlank() ||
-        param.units.isNotBlank() ||
+    param -> param.line != 0 &&
+        param.position != 0 &&
+        param.separator.isNotBlank() &&
+        param.name.isNotBlank() &&
+        param.units.isNotBlank() &&
         param.bounds.isNotEmpty()
 }.toMutableList()

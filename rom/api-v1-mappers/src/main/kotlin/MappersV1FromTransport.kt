@@ -33,6 +33,7 @@ private fun ModelDebug?.transportToStubCase(): Stubs = when (this?.stub) {
     ModelRequestDebugStubs.SUCCESS -> Stubs.SUCCESS
     ModelRequestDebugStubs.NOT_FOUND -> Stubs.NOT_FOUND
     ModelRequestDebugStubs.BAD_ID -> Stubs.BAD_ID
+    ModelRequestDebugStubs.BAD_LOCK -> Stubs.BAD_LOCK
     ModelRequestDebugStubs.BAD_NAME -> Stubs.BAD_NAME
     ModelRequestDebugStubs.BAD_MACRO_PATH -> Stubs.BAD_MACRO_PATH
     ModelRequestDebugStubs.BAD_SOLVER_PATH -> Stubs.BAD_SOLVER_PATH

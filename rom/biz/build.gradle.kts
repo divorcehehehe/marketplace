@@ -29,7 +29,7 @@ kotlin {
                 implementation(kotlin("stdlib-jdk8"))
             }
         }
-        jvmTest {
+        jvmTest{
             dependencies {
                 implementation(kotlin("test-junit"))
             }

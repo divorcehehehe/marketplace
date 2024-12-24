@@ -563,6 +563,7 @@ components:
         - success
         - notFound
         - badId
+        - badLock
         - badName
         - badMacroPath
         - badSolverPath

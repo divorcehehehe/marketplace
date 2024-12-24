@@ -5,6 +5,7 @@ enum class Stubs {
     SUCCESS,
     NOT_FOUND,
     BAD_ID,
+    BAD_LOCK,
     BAD_NAME,
     BAD_MACRO_PATH,
     BAD_SOLVER_PATH,

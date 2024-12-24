@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class ModelCreateStubTest {
 
     private val processor = ModelProcessor()
-    private val name = "title 666"
+    private val name = "name 666"
     private val macroPath = "macro path 666"
     private val solverPath = "solver path 666"
     private val params = mutableListOf(

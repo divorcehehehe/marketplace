@@ -12,7 +12,8 @@ class ModelUpdateStubTest {
 
     private val processor = ModelProcessor()
     private val id = ModelId("666")
-    private val name = "title 666"
+    private val lock = ModelLock("666")
+    private val name = "name 666"
     private val macroPath = "macro path 666"
     private val solverPath = "solver path 666"
     private val params = mutableListOf(
@@ -29,6 +30,7 @@ class ModelUpdateStubTest {
     private val visibility = Visibility.VISIBLE_PUBLIC
     private val modelRequest = Model(
         id = id,
+        lock = lock,
         name = name,
         macroPath = macroPath,
         solverPath = solverPath,
@@ -68,6 +70,21 @@ class ModelUpdateStubTest {
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("id",         ctx.errors.firstOrNull()?.field)
+        assertEquals("validation", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun badLock() = runTest {
+        val ctx = Context(
+            command = Command.UPDATE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.BAD_LOCK,
+            modelRequest = modelRequest.copy(lock = ModelLock.NONE),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),               ctx.modelResponse)
+        assertEquals("lock",       ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
     }
 

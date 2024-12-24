@@ -13,6 +13,7 @@ class ModelDeleteStubTest {
 
     private val processor = ModelProcessor()
     private val id = ModelId("666")
+    private val lock = ModelLock("666")
 
     @Test
     fun delete() = runTest {
@@ -24,12 +25,12 @@ class ModelDeleteStubTest {
             stubCase = Stubs.SUCCESS,
             modelRequest = Model(
                 id = id,
+                lock = lock,
             ),
         )
         processor.exec(ctx)
 
         with (ModelStub.get()) {
-            assertEquals(id,                ctx.modelResponse.id)
             assertEquals(ownerId,           ctx.modelResponse.ownerId)
             assertEquals(permissionsClient, ctx.modelResponse.permissionsClient)
             assertEquals(name,              ctx.modelResponse.name)
@@ -39,6 +40,8 @@ class ModelDeleteStubTest {
             assertEquals(sampling,          ctx.modelResponse.sampling)
             assertEquals(visibility,        ctx.modelResponse.visibility)
         }
+        assertEquals(id,                ctx.modelResponse.id)
+        assertEquals(lock,              ctx.modelResponse.lock)
     }
 
     @Test
@@ -53,6 +56,21 @@ class ModelDeleteStubTest {
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("id",         ctx.errors.firstOrNull()?.field)
+        assertEquals("validation", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun badLock() = runTest {
+        val ctx = Context(
+            command = Command.DELETE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.BAD_LOCK,
+            modelRequest = Model(),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),               ctx.modelResponse)
+        assertEquals("lock",       ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
     }
 

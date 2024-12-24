@@ -1,18 +1,18 @@
 package rom.biz.validation
 
+import marketplace.cor.ICorChainDsl
+import marketplace.cor.worker
 import rom.common.helpers.errorValidation
 import rom.common.Context
 import rom.common.helpers.fail
-import marketplace.cor.ICorChainDsl
-import marketplace.cor.worker
 
-fun ICorChainDsl<Context>.validateLockNotEmpty(title: String) = worker {
+fun ICorChainDsl<Context>.validateIdNotEmpty(title: String) = worker {
     this.title = title
-    on { modelValidating.lock.asString().isEmpty() }
+    on { modelValidating.id.asString().isEmpty() }
     handle {
         fail(
             errorValidation(
-                field = "lock",
+                field = "id",
                 violationCode = "empty",
                 description = "field must not be empty"
             )
