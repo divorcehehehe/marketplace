@@ -10,6 +10,8 @@ kotlin {
             dependencies {
                 implementation(kotlin("stdlib-common"))
 
+                implementation(libs.cor)
+
                 implementation(project(":common"))
                 implementation(project(":stubs"))
             }
@@ -27,7 +29,7 @@ kotlin {
                 implementation(kotlin("stdlib-jdk8"))
             }
         }
-        jvmTest {
+        jvmTest{
             dependencies {
                 implementation(kotlin("test-junit"))
             }

@@ -19,8 +19,6 @@ import rom.api.v1.models.ModelRequestDebugStubs
 import rom.api.v1.models.BaseParam
 import rom.api.v1.models.ModelSampling
 import rom.api.v1.models.ModelVisibility
-import rom.api.v2.apiV2RequestSerialize
-import rom.api.v2.apiV2ResponseDeserialize
 import rom.app.rabbit.config.AppSettings
 import rom.app.rabbit.config.RabbitConfig
 import rom.app.rabbit.config.RabbitExchangeConfiguration
@@ -29,6 +27,8 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import rom.api.v2.apiV2RequestSerialize
+import rom.api.v2.apiV2ResponseDeserialize
 import rom.api.v2.models.ModelCreateObject as ModelCreateObjectV2
 import rom.api.v2.models.ModelCreateRequest as ModelCreateRequestV2
 import rom.api.v2.models.ModelCreateResponse as ModelCreateResponseV2
@@ -107,7 +107,7 @@ internal class RabbitMqTest {
     }
 
     @Test
-    fun adCreateTestV1() {
+    fun modelCreateTestV1() {
         val (keyOut, keyIn) = with(appSettings.controllersConfigV1) { Pair(keyOut, keyIn) }
         val (tstHost, tstPort) = with(appSettings.rabbit) { Pair(host, port) }
         ConnectionFactory().apply {
@@ -127,7 +127,7 @@ internal class RabbitMqTest {
                 }
                 channel.basicConsume(queueOut, true, deliverCallback, CancelCallback { })
 
-                channel.basicPublish(EXCHANGE, keyIn, null, apiV1Mapper.writeValueAsBytes(boltCreateV1))
+                channel.basicPublish(EXCHANGE, keyIn, null, apiV1Mapper.writeValueAsBytes(modelCreateV1))
 
                 runBlocking {
                     withTimeoutOrNull(1000L) {
@@ -156,7 +156,7 @@ internal class RabbitMqTest {
     }
 
     @Test
-    fun adCreateTestV2() {
+    fun modelCreateTestV2() {
         val (keyOut, keyIn) = with(appSettings.controllersConfigV2) { Pair(keyOut, keyIn) }
         val (tstHost, tstPort) = with(appSettings.rabbit) { Pair(host, port) }
         ConnectionFactory().apply {
@@ -176,7 +176,7 @@ internal class RabbitMqTest {
                 }
                 channel.basicConsume(queueOut, true, deliverCallback, CancelCallback { })
 
-                channel.basicPublish(EXCHANGE, keyIn, null, apiV2RequestSerialize(boltCreateV2).toByteArray())
+                channel.basicPublish(EXCHANGE, keyIn, null, apiV2RequestSerialize(modelCreateV2).toByteArray())
 
                 runBlocking {
                     withTimeoutOrNull(1000L) {
@@ -203,7 +203,7 @@ internal class RabbitMqTest {
         }
     }
 
-    private val boltCreateV1 = with(ModelStub.get()) {
+    private val modelCreateV1 = with(ModelStub.get()) {
         ModelCreateRequest(
             debug = ModelDebug(
                 mode = ModelRequestDebugMode.STUB,
@@ -229,7 +229,7 @@ internal class RabbitMqTest {
         )
     }
 
-    private val boltCreateV2 = with(ModelStub.get()) {
+    private val modelCreateV2 = with(ModelStub.get()) {
         ModelCreateRequestV2(
             debug = ModelDebugV2(
                 mode = ModelRequestDebugModeV2.STUB,

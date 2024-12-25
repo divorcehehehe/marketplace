@@ -19,6 +19,7 @@ class MapperPredictTest {
                 id = "model_id",
                 paramValues = listOf(30.0),
             ),
+            requestUserId = "user_id",
         )
 
         val context = Context()
@@ -37,6 +38,7 @@ class MapperPredictTest {
         assertEquals("NONE",     context.modelRequest.sampling.name)
         assertEquals("NONE",     context.modelRequest.visibility.name)
         assertEquals(30.0,       context.modelRequest.paramValues.firstOrNull())
+        assertEquals("user_id",  context.requestUserId.asString())
     }
 
     @Test
@@ -59,6 +61,7 @@ class MapperPredictTest {
         assertEquals("NONE",    context.modelRequest.sampling.name)
         assertEquals("NONE",    context.modelRequest.visibility.name)
         assertEquals(null,      context.modelRequest.paramValues.firstOrNull())
+        assertEquals("",        context.requestUserId.asString())
     }
 
     @Test
