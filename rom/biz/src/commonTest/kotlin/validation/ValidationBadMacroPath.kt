@@ -21,7 +21,8 @@ private val model = Model(
             units = "dB",
             bounds = mutableListOf(33.3, 66.6),
         )
-    )
+    ),
+    visibility = Visibility.VISIBLE_PUBLIC,
 )
 
 fun validationMacroPathCorrect(command: Command, processor: ModelProcessor) = runBizTest {

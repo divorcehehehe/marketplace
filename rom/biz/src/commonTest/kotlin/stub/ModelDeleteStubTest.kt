@@ -51,7 +51,9 @@ class ModelDeleteStubTest {
             state = State.NONE,
             workMode = WorkMode.STUB,
             stubCase = Stubs.BAD_ID,
-            modelRequest = Model(),
+            modelRequest = Model(
+                lock = lock,
+            ),
         )
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
@@ -66,12 +68,71 @@ class ModelDeleteStubTest {
             state = State.NONE,
             workMode = WorkMode.STUB,
             stubCase = Stubs.BAD_LOCK,
-            modelRequest = Model(),
+            modelRequest = Model(
+                id = id,
+            ),
         )
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("lock",       ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotRead() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.DELETE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_READ,
+            modelRequest = Model(
+                id = id,
+                lock = lock,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotUpdate() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.DELETE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_UPDATE,
+            modelRequest = Model(
+                id = id,
+                lock = lock,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotDelete() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.DELETE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_DELETE,
+            modelRequest = Model(
+                id = id,
+                lock = lock,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
     }
 
     @Test
@@ -83,6 +144,7 @@ class ModelDeleteStubTest {
             stubCase = Stubs.DB_ERROR,
             modelRequest = Model(
                 id = id,
+                lock = lock,
             ),
         )
         processor.exec(ctx)
@@ -99,6 +161,7 @@ class ModelDeleteStubTest {
             stubCase = Stubs.NONE,
             modelRequest = Model(
                 id = id,
+                lock = lock,
             ),
         )
         processor.exec(ctx)

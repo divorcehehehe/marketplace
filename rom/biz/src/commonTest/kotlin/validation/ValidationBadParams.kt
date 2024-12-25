@@ -30,6 +30,7 @@ private val model = Model(
             bounds = mutableListOf(1e6, 1e8),
         ),
     ),
+    visibility = Visibility.VISIBLE_PUBLIC,
 )
 
 fun validationParamsCorrect(command: Command, processor: ModelProcessor) = runBizTest {

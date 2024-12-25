@@ -55,6 +55,7 @@ class ModelPredictStubTest {
             workMode = WorkMode.STUB,
             stubCase = Stubs.BAD_ID,
             modelRequest = Model(
+                lock = lock,
                 paramValues = paramValues,
             ),
         )
@@ -72,6 +73,7 @@ class ModelPredictStubTest {
             workMode = WorkMode.STUB,
             stubCase = Stubs.BAD_LOCK,
             modelRequest = Model(
+                id = id,
                 paramValues = paramValues,
             ),
         )
@@ -82,20 +84,43 @@ class ModelPredictStubTest {
     }
 
     @Test
-    fun badParamValues() = runTest {
+    fun cannotRead() = runTest {
         val ctx = Context(
+            requestUserId = UserId("hacker"),
             command = Command.PREDICT,
             state = State.NONE,
             workMode = WorkMode.STUB,
-            stubCase = Stubs.BAD_PARAM_VALUES,
+            stubCase = Stubs.CANNOT_READ,
             modelRequest = Model(
                 id = id,
+                lock = lock,
+                paramValues = paramValues,
             ),
         )
         processor.exec(ctx)
-        assertEquals(Model(),                ctx.modelResponse)
-        assertEquals("paramValues", ctx.errors.firstOrNull()?.field)
-        assertEquals("validation",  ctx.errors.firstOrNull()?.group)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotUpdate() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.PREDICT,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_UPDATE,
+            modelRequest = Model(
+                id = id,
+                lock = lock,
+                paramValues = paramValues,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
     }
 
     @Test

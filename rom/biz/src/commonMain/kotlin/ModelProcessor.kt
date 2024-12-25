@@ -57,6 +57,8 @@ class ModelProcessor(
                 validateParamsNotEmpty("Проверка наличия поля params")
                 validateParamsHasContent(      "Проверка поля params")
 
+                validateVisibilityNotEmpty("Проверка наличия поля visibility")
+
                 finishModelValidation("Завершение проверок")
             }
         }
@@ -65,6 +67,7 @@ class ModelProcessor(
             stubs("Обработка стабов") {
                 stubReadSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
+                stubValidationCannotRead("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -97,6 +100,8 @@ class ModelProcessor(
                 stubValidationBadParamBounds("Имитация ошибки валидации границ диапозона варьирования параметра")
                 stubValidationBadSampling("Имитация ошибки валидации способа сэмплирования модели")
                 stubValidationBadVisibility("Имитация ошибки валидации видимости модели")
+                stubValidationCannotRead("Имитация отсутствия прав")
+                stubValidationCannotUpdate("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -128,6 +133,8 @@ class ModelProcessor(
                 validateParamsNotEmpty("Проверка наличия поля params")
                 validateParamsHasContent(      "Проверка поля params")
 
+                validateVisibilityNotEmpty("Проверка наличия поля visibility")
+
                 finishModelValidation("Завершение проверок")
             }
         }
@@ -137,6 +144,9 @@ class ModelProcessor(
                 stubDeleteSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
                 stubValidationBadLock("Имитация ошибки валидации блокировки")
+                stubValidationCannotRead("Имитация отсутствия прав")
+                stubValidationCannotUpdate("Имитация отсутствия прав")
+                stubValidationCannotDelete("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -161,6 +171,7 @@ class ModelProcessor(
             stubs("Обработка стабов") {
                 stubSearchSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadSearchString("Имитация ошибки валидации поисковой строки")
+                stubValidationCannotRead("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -180,6 +191,8 @@ class ModelProcessor(
                 stubTrainSuccess("Имитация успешной обработки", corSettings)
                 stubValidationBadId("Имитация ошибки валидации id")
                 stubValidationBadLock("Имитация ошибки валидации блокировки")
+                stubValidationCannotRead("Имитация отсутствия прав")
+                stubValidationCannotUpdate("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -206,6 +219,8 @@ class ModelProcessor(
                 stubValidationBadId("Имитация ошибки валидации id")
                 stubValidationBadLock("Имитация ошибки валидации блокировки")
                 stubValidationBadParamValues("Имитация ошибки валидации значений параметров")
+                stubValidationCannotRead("Имитация отсутствия прав")
+                stubValidationCannotUpdate("Имитация отсутствия прав")
                 stubDbError("Имитация ошибки работы с БД")
                 stubNoCase("Ошибка: запрошенный стаб недопустим")
             }
@@ -221,9 +236,6 @@ class ModelProcessor(
 
                 validateLockNotEmpty("Проверка наличия поля lock")
                 validateLockProperFormat(    "Проверка поля lock")
-
-                validateParamValuesSize(             "Проверка размера списка paramValues")
-                validateParamValuesProperContent("Проверка содержимого списка paramValues")
 
                 finishModelValidation("Завершение проверок")
             }

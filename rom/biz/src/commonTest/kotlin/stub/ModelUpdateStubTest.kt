@@ -254,13 +254,57 @@ class ModelUpdateStubTest {
     }
 
     @Test
+    fun cannotUpdate() = runTest {
+        val ctx = Context(
+            command = Command.UPDATE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_UPDATE,
+            modelRequest = modelRequest,
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotRead() = runTest {
+        val ctx = Context(
+            command = Command.UPDATE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_READ,
+            modelRequest = modelRequest,
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun databaseError() = runTest {
+        val ctx = Context(
+            command = Command.UPDATE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.DB_ERROR,
+            modelRequest = modelRequest,
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),             ctx.modelResponse)
+        assertEquals("internal", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
     fun badNoCase() = runTest {
         val ctx = Context(
             command = Command.UPDATE,
             state = State.NONE,
             workMode = WorkMode.STUB,
             stubCase = Stubs.NONE,
-            modelRequest = modelRequest.copy(),
+            modelRequest = modelRequest,
         )
         processor.exec(ctx)
         assertEquals(Model(),         ctx.modelResponse)

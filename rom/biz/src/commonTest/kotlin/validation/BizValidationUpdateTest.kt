@@ -43,4 +43,7 @@ class BizValidationUpdateTest: BaseBizValidationTest() {
     @Test fun badParamBoundsSize() =   validationParamsBadBoundsSize(command, processor)
     @Test fun badParamBoundsValues() = validationParamsBadBoundsValues(command, processor)
 
+    @Test fun correctVisibility() = validationVisibilityCorrect(command, processor)
+    @Test fun badVisibility() =     validationVisibilityEmpty(command, processor)
+
 }

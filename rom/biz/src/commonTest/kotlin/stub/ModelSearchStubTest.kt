@@ -49,12 +49,28 @@ class ModelSearchStubTest {
             state = State.NONE,
             workMode = WorkMode.STUB,
             stubCase = Stubs.BAD_SEARCH_STRING,
-            modelFilterRequest = filter,
+            modelFilterRequest = ModelFilter(),
         )
         processor.exec(ctx)
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("searchString",         ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
+    fun cannotRead() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.SEARCH,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_READ,
+            modelFilterRequest = filter,
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
     }
 
     @Test

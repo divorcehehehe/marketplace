@@ -219,13 +219,27 @@ class ModelCreateStubTest {
     }
 
     @Test
+    fun databaseError() = runTest {
+        val ctx = Context(
+            command = Command.CREATE,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.DB_ERROR,
+            modelRequest = modelRequest,
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),         ctx.modelResponse)
+        assertEquals("internal", ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
     fun badNoCase() = runTest {
         val ctx = Context(
             command = Command.CREATE,
             state = State.NONE,
             workMode = WorkMode.STUB,
             stubCase = Stubs.NONE,
-            modelRequest = modelRequest.copy(),
+            modelRequest = modelRequest,
         )
         processor.exec(ctx)
         assertEquals(Model(),         ctx.modelResponse)

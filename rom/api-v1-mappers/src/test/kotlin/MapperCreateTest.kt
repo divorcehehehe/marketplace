@@ -32,6 +32,7 @@ class MapperCreateTest {
                 sampling = ModelSampling.LATIN_HYPER_CUBE,
                 visibility = ModelVisibility.PUBLIC,
             ),
+            requestUserId = "user_id",
         )
 
         val context = Context()
@@ -54,6 +55,8 @@ class MapperCreateTest {
         assertEquals(1.0,                context.modelRequest.params.firstOrNull()?.bounds?.lastOrNull())
         assertEquals("LATIN_HYPER_CUBE", context.modelRequest.sampling.name)
         assertEquals("VISIBLE_PUBLIC",   context.modelRequest.visibility.name)
+        assertEquals("user_id",          context.modelRequest.ownerId.asString())
+        assertEquals("user_id",          context.requestUserId.asString())
     }
 
     @Test
@@ -74,6 +77,8 @@ class MapperCreateTest {
         assertEquals(null,     context.modelRequest.params.firstOrNull())
         assertEquals("NONE",   context.modelRequest.sampling.name)
         assertEquals("NONE",   context.modelRequest.visibility.name)
+        assertEquals("",       context.modelRequest.ownerId.asString())
+        assertEquals("",       context.requestUserId.asString())
     }
 
     @Test

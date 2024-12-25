@@ -18,6 +18,7 @@ class MapperSearchTest {
             modelFilter = ModelSearchFilter(
                 searchString = "model",
             ),
+            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -30,6 +31,7 @@ class MapperSearchTest {
         assertEquals("",        context.requestId.asString())
         assertEquals("model",   context.modelFilterRequest.searchString)
         assertEquals("",        context.modelFilterRequest.ownerId.asString())
+        assertEquals("user_id", context.requestUserId.asString())
     }
 
     @Test
@@ -46,6 +48,7 @@ class MapperSearchTest {
         assertEquals("",       context.requestId.asString())
         assertEquals("",       context.modelFilterRequest.searchString)
         assertEquals("",       context.modelFilterRequest.ownerId.asString())
+        assertEquals("",       context.requestUserId.asString())
     }
 
     @Test

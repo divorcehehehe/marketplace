@@ -18,6 +18,7 @@ class MapperTrainTest {
             model = ModelTrainObject(
                 id = "model_id",
             ),
+            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -35,6 +36,7 @@ class MapperTrainTest {
         assertEquals(null,       context.modelRequest.params.firstOrNull())
         assertEquals("NONE",     context.modelRequest.sampling.name)
         assertEquals("NONE",     context.modelRequest.visibility.name)
+        assertEquals("user_id",  context.requestUserId.asString())
     }
 
     @Test
@@ -57,6 +59,7 @@ class MapperTrainTest {
         assertEquals(null,    context.modelRequest.params.firstOrNull())
         assertEquals("NONE",  context.modelRequest.sampling.name)
         assertEquals("NONE",  context.modelRequest.visibility.name)
+        assertEquals("",      context.requestUserId.asString())
     }
 
     @Test

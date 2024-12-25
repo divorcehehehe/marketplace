@@ -56,6 +56,24 @@ class ModelReadStubTest {
     }
 
     @Test
+    fun cannotRead() = runTest {
+        val ctx = Context(
+            requestUserId = UserId("hacker"),
+            command = Command.READ,
+            state = State.NONE,
+            workMode = WorkMode.STUB,
+            stubCase = Stubs.CANNOT_READ,
+            modelRequest = Model(
+                id = id,
+            ),
+        )
+        processor.exec(ctx)
+        assertEquals(Model(),                           ctx.modelResponse)
+        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
+        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
+    }
+
+    @Test
     fun databaseError() = runTest {
         val ctx = Context(
             command = Command.READ,

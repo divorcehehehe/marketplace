@@ -13,6 +13,8 @@ data class Context(
     var stubCase: Stubs = Stubs.NONE,
     var requestId: RequestId = RequestId.NONE,
     var timeStart: Instant = Instant.NONE,
+    var requestUserId: UserId = UserId.NONE,
+
     var modelRequest: Model = Model(),
     var modelFilterRequest: ModelFilter = ModelFilter(),
 

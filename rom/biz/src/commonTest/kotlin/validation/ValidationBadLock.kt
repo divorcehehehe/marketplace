@@ -22,6 +22,7 @@ private val model = Model(
             bounds = mutableListOf(33.3, 66.6),
         ),
     ),
+    visibility = Visibility.VISIBLE_PUBLIC,
 )
 
 fun validationLockCorrect(command: Command, processor: ModelProcessor) = runBizTest {

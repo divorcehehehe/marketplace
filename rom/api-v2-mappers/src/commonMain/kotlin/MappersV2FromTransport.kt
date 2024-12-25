@@ -16,6 +16,7 @@ fun Context.fromTransport(request: IRequest) = when (request) {
     is ModelPredictRequest -> fromTransport(request)
 }
 
+private fun String?.toUserId() = this?.let { UserId(it) } ?: UserId.NONE
 private fun String?.toModelId() = this?.let { ModelId(it) } ?: ModelId.NONE
 private fun String?.toModelLock() = this?.let { ModelLock(it) } ?: ModelLock.NONE
 
@@ -43,6 +44,7 @@ private fun ModelDebug?.transportToStubCase(): Stubs = when (this?.stub) {
     ModelRequestDebugStubs.BAD_SAMPLING -> Stubs.BAD_SAMPLING
     ModelRequestDebugStubs.BAD_VISIBILITY -> Stubs.BAD_VISIBILITY
     ModelRequestDebugStubs.CANNOT_DELETE -> Stubs.CANNOT_DELETE
+    ModelRequestDebugStubs.CANNOT_UPDATE -> Stubs.CANNOT_UPDATE
     ModelRequestDebugStubs.BAD_SEARCH_STRING -> Stubs.BAD_SEARCH_STRING
     ModelRequestDebugStubs.BAD_PARAM_VALUES -> Stubs.BAD_PARAM_VALUES
     ModelRequestDebugStubs.DB_ERROR -> Stubs.DB_ERROR
@@ -51,13 +53,15 @@ private fun ModelDebug?.transportToStubCase(): Stubs = when (this?.stub) {
 
 fun Context.fromTransport(request: ModelCreateRequest) {
     command = Command.CREATE
-    modelRequest = request.model?.toInternal() ?: Model()
+    requestUserId = request.requestUserId.toUserId()
+    modelRequest = request.model?.toInternal(requestUserId) ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
 }
 
 fun Context.fromTransport(request: ModelReadRequest) {
     command = Command.READ
+    requestUserId = request.requestUserId.toUserId()
     modelRequest = request.model?.toInternal() ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -65,6 +69,7 @@ fun Context.fromTransport(request: ModelReadRequest) {
 
 fun Context.fromTransport(request: ModelUpdateRequest) {
     command = Command.UPDATE
+    requestUserId = request.requestUserId.toUserId()
     modelRequest = request.model?.toInternal() ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -72,6 +77,7 @@ fun Context.fromTransport(request: ModelUpdateRequest) {
 
 fun Context.fromTransport(request: ModelDeleteRequest) {
     command = Command.DELETE
+    requestUserId = request.requestUserId.toUserId()
     modelRequest = request.model?.toInternal() ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -79,6 +85,7 @@ fun Context.fromTransport(request: ModelDeleteRequest) {
 
 fun Context.fromTransport(request: ModelSearchRequest) {
     command = Command.SEARCH
+    requestUserId = request.requestUserId.toUserId()
     modelFilterRequest = request.modelFilter?.toInternal() ?: ModelFilter()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -86,6 +93,7 @@ fun Context.fromTransport(request: ModelSearchRequest) {
 
 fun Context.fromTransport(request: ModelTrainRequest) {
     command = Command.TRAIN
+    requestUserId = request.requestUserId.toUserId()
     modelRequest = request.model?.toInternal() ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -93,6 +101,7 @@ fun Context.fromTransport(request: ModelTrainRequest) {
 
 fun Context.fromTransport(request: ModelPredictRequest) {
     command = Command.PREDICT
+    requestUserId = request.requestUserId.toUserId()
     modelRequest = request.model?.toInternal() ?: Model()
     workMode = request.debug.transportToWorkMode()
     stubCase = request.debug.transportToStubCase()
@@ -109,10 +118,12 @@ private fun ModelDeleteObject.toInternal(): Model = Model(
 
 private fun ModelTrainObject.toInternal(): Model = Model(
     id = id.toModelId(),
+    lock = lock.toModelLock(),
 )
 
 private fun ModelPredictObject.toInternal(): Model = Model(
     id = id.toModelId(),
+    lock = lock.toModelLock(),
     paramValues = paramValues?.toTypedArray() ?: emptyArray(),
 )
 
@@ -120,7 +131,8 @@ private fun ModelSearchFilter.toInternal(): ModelFilter = ModelFilter(
     searchString = this.searchString ?: ""
 )
 
-private fun ModelCreateObject.toInternal(): Model = Model(
+private fun ModelCreateObject.toInternal(requestUserId: UserId): Model = Model(
+    ownerId = requestUserId,
     name = this.name ?: "",
     macroPath = this.macroPath ?: "",
     solverPath = this.solverPath ?: "",
