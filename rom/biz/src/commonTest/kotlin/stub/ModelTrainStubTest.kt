@@ -32,7 +32,6 @@ class ModelTrainStubTest {
 
         with (ModelStub.get()) {
             assertEquals(ownerId,           ctx.modelResponse.ownerId)
-            assertEquals(permissionsClient, ctx.modelResponse.permissionsClient)
             assertEquals(name,              ctx.modelResponse.name)
             assertEquals(macroPath,         ctx.modelResponse.macroPath)
             assertEquals(solverPath,        ctx.modelResponse.solverPath)
@@ -76,44 +75,6 @@ class ModelTrainStubTest {
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("lock",       ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
-    }
-
-    @Test
-    fun cannotRead() = runTest {
-        val ctx = Context(
-            requestUserId = UserId("hacker"),
-            command = Command.TRAIN,
-            state = State.NONE,
-            workMode = WorkMode.STUB,
-            stubCase = Stubs.CANNOT_READ,
-            modelRequest = Model(
-                id = id,
-                lock = lock,
-            ),
-        )
-        processor.exec(ctx)
-        assertEquals(Model(),                           ctx.modelResponse)
-        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
-        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
-    }
-
-    @Test
-    fun cannotUpdate() = runTest {
-        val ctx = Context(
-            requestUserId = UserId("hacker"),
-            command = Command.TRAIN,
-            state = State.NONE,
-            workMode = WorkMode.STUB,
-            stubCase = Stubs.CANNOT_UPDATE,
-            modelRequest = Model(
-                id = id,
-                lock = lock,
-            ),
-        )
-        processor.exec(ctx)
-        assertEquals(Model(),                           ctx.modelResponse)
-        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
-        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
     }
 
     @Test

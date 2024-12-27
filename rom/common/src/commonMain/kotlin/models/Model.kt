@@ -3,8 +3,8 @@ package rom.common.models
 data class Model(
     var id: ModelId = ModelId.NONE,
     var ownerId: UserId = UserId.NONE,
+    var requestUserId: UserId = UserId.NONE,
     var lock: ModelLock = ModelLock.NONE,
-    val permissionsClient: MutableSet<ModelPermissionClient> = mutableSetOf(),
     var field: Array<Double> = emptyArray(),
     var name: String = "",
     var macroPath: String = "",
@@ -13,11 +13,11 @@ data class Model(
     var sampling: Sampling = Sampling.NONE,
     var visibility: Visibility = Visibility.NONE,
     var paramValues: Array<Double> = emptyArray(),
-) {
-    fun deepCopy(): Model = copy(
-        permissionsClient = permissionsClient.toMutableSet(),
-    )
 
+//    ROM related vectors
+    var usVector: Array<Double> = emptyArray(),
+    var vtVector: Array<Double> = emptyArray(),
+) {
     fun isEmpty() = this == NONE
 
     override fun equals(other: Any?): Boolean {
@@ -29,7 +29,6 @@ data class Model(
         if (id != other.id) return false
         if (ownerId != other.ownerId) return false
         if (lock != other.lock) return false
-        if (permissionsClient != other.permissionsClient) return false
         if (!field.contentEquals(other.field)) return false
         if (name != other.name) return false
         if (macroPath != other.macroPath) return false

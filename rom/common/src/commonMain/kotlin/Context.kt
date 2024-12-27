@@ -3,6 +3,7 @@ package rom.common
 import kotlinx.datetime.Instant
 import rom.common.models.*
 import rom.common.stubs.Stubs
+import rom.common.repo.IRepoModel
 
 data class Context(
     var command: Command = Command.NONE,
@@ -13,7 +14,6 @@ data class Context(
     var stubCase: Stubs = Stubs.NONE,
     var requestId: RequestId = RequestId.NONE,
     var timeStart: Instant = Instant.NONE,
-    var requestUserId: UserId = UserId.NONE,
 
     var modelRequest: Model = Model(),
     var modelFilterRequest: ModelFilter = ModelFilter(),
@@ -26,6 +26,12 @@ data class Context(
 
     var modelResponse: Model = Model(),
     var modelsResponse: MutableList<Model> = mutableListOf(),
+
+    var modelRepo: IRepoModel = IRepoModel.NONE,
+    var modelRepoRead: Model = Model(), // То, что прочитали из репозитория
+    var modelRepoPrepare: Model = Model(), // То, что готовим для сохранения в БД
+    var modelRepoDone: Model = Model(),  // Результат, полученный из БД
+    var modelsRepoDone: MutableList<Model> = mutableListOf(),
 ) {
 
     override fun hashCode(): Int {

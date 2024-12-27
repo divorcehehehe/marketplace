@@ -6,6 +6,11 @@ import kotlin.test.Test
 class BizValidationCreateTest: BaseBizValidationTest() {
     override val command: Command = Command.CREATE
 
+    @Test fun correctRequestUserId() = validationRequestUserIdCorrect(command, processor)
+    @Test fun trimRequestUserId() = validationRequestUserIdTrim(command, processor)
+    @Test fun emptyRequestUserId() = validationRequestUserIdEmpty(command, processor)
+    @Test fun badFormatRequestUserId() = validationRequestUserIdFormat(command, processor)
+
     @Test fun correctName() = validationNameCorrect(command, processor)
     @Test fun trimName() = validationNameTrim(command, processor)
     @Test fun emptyName() = validationNameEmpty(command, processor)

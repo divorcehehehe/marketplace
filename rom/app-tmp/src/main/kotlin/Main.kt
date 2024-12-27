@@ -37,10 +37,6 @@ suspend fun main() {
             modelResponse = Model(
                 id = ModelId("model_id"),
                 ownerId = UserId("user_id"),
-                permissionsClient = mutableSetOf(
-                    ModelPermissionClient.READ,
-                    ModelPermissionClient.UPDATE
-                ),
                 name = "Обтекание крыла",
                 macroPath = "путь/к/макросу",
                 solverPath = "путь/к/солверу",

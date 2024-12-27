@@ -17,8 +17,8 @@ class MapperSearchTest {
             ),
             modelFilter = ModelSearchFilter(
                 searchString = "model",
+                requestUserId = "user_id",
             ),
-            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -30,8 +30,7 @@ class MapperSearchTest {
         assertEquals("SUCCESS", context.stubCase.name)
         assertEquals("",        context.requestId.asString())
         assertEquals("model",   context.modelFilterRequest.searchString)
-        assertEquals("",        context.modelFilterRequest.ownerId.asString())
-        assertEquals("user_id", context.requestUserId.asString())
+        assertEquals("user_id", context.modelFilterRequest.requestUserId.asString())
     }
 
     @Test
@@ -47,8 +46,7 @@ class MapperSearchTest {
         assertEquals("NONE",   context.stubCase.name)
         assertEquals("",       context.requestId.asString())
         assertEquals("",       context.modelFilterRequest.searchString)
-        assertEquals("",       context.modelFilterRequest.ownerId.asString())
-        assertEquals("",       context.requestUserId.asString())
+        assertEquals("",       context.modelFilterRequest.requestUserId.asString())
     }
 
     @Test
@@ -70,7 +68,6 @@ class MapperSearchTest {
                     id = ModelId("model_id"),
                     ownerId = UserId("owner_id"),
                     lock = ModelLock("model_lock"),
-                    permissionsClient = mutableSetOf(ModelPermissionClient.DELETE),
                     name = "model",
                     macroPath = "path/to/macro",
                     solverPath = "path/to/solver",
@@ -103,7 +100,6 @@ class MapperSearchTest {
         assertEquals("model_id",         request.models?.firstOrNull()?.id)
         assertEquals("owner_id",         request.models?.firstOrNull()?.ownerId)
         assertEquals("model_lock",       request.models?.firstOrNull()?.lock)
-        assertEquals("delete",           request.models?.firstOrNull()?.permissions?.firstOrNull()?.value)
         assertEquals(null,               request.models?.firstOrNull()?.field)
         assertEquals("model",            request.models?.firstOrNull()?.name)
         assertEquals("path/to/macro",    request.models?.firstOrNull()?.macroPath)

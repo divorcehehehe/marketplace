@@ -32,7 +32,6 @@ class ModelSearchStubTest {
         with (ModelStub.prepareSearchList(filter.searchString)[0]) {
             assertEquals(id,                first.id)
             assertEquals(ownerId,           first.ownerId)
-            assertEquals(permissionsClient, first.permissionsClient)
             assertEquals(name,              first.name)
             assertEquals(macroPath,         first.macroPath)
             assertEquals(solverPath,        first.solverPath)
@@ -55,22 +54,6 @@ class ModelSearchStubTest {
         assertEquals(Model(),               ctx.modelResponse)
         assertEquals("searchString",         ctx.errors.firstOrNull()?.field)
         assertEquals("validation", ctx.errors.firstOrNull()?.group)
-    }
-
-    @Test
-    fun cannotRead() = runTest {
-        val ctx = Context(
-            requestUserId = UserId("hacker"),
-            command = Command.SEARCH,
-            state = State.NONE,
-            workMode = WorkMode.STUB,
-            stubCase = Stubs.CANNOT_READ,
-            modelFilterRequest = filter,
-        )
-        processor.exec(ctx)
-        assertEquals(Model(),                           ctx.modelResponse)
-        assertEquals("permissionsModelClient", ctx.errors.firstOrNull()?.field)
-        assertEquals("validation",             ctx.errors.firstOrNull()?.group)
     }
 
     @Test

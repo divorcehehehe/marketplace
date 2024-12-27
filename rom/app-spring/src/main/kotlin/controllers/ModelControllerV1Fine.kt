@@ -17,7 +17,7 @@ class ModelControllerV1Fine(
 
     @PostMapping("create")
     suspend fun create(@RequestBody request: ModelCreateRequest): ModelCreateResponse =
-        process(appSettings, request = request, this::class, "create")
+        process(appSettings, request = request.also { println("controller: ${request.model?.requestUserId}") }, this::class, "create")
 
     @PostMapping("read")
     suspend fun  read(@RequestBody request: ModelReadRequest): ModelReadResponse =

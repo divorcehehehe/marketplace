@@ -26,7 +26,7 @@ private fun Context.toLog(): ModelLogSchema? {
 
 private fun ModelFilter.toLog() = ModelFilterLog(
     searchString = searchString.takeIf { it.isNotBlank() },
-    ownerId = ownerId.takeIf { it != UserId.NONE }?.asString(),
+    requestUserId = requestUserId.takeIf { it != UserId.NONE }?.asString(),
 )
 
 private fun ROMError.toLog() = ErrorLogSchema(
@@ -39,7 +39,7 @@ private fun ROMError.toLog() = ErrorLogSchema(
 private fun Model.toLog(): ModelLog = ModelLog(
     id = id.takeIf { it != ModelId.NONE }?.asString(),
     ownerId = ownerId.takeIf { it != UserId.NONE }?.asString(),
-    permissions = permissionsClient.takeIf { it.isNotEmpty() }?.map { it.name }?.toSet(),
+    requestUserId = requestUserId.takeIf { it != UserId.NONE }?.asString(),
     field = field.takeIf { it.isNotEmpty() }?.toList(),
     name = name.takeIf { it.isNotBlank() },
     macroPath = macroPath.takeIf { it.isNotBlank() },

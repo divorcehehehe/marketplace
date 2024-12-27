@@ -19,6 +19,9 @@ kotlin {
         commonTest {
             dependencies {
                 api(libs.coroutines.test)
+                implementation(project(":repo-tests"))
+                implementation(project(":repo-common"))
+                implementation(project(":repo-inmemory"))
 
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))

@@ -9,6 +9,7 @@ import kotlin.test.assertNotEquals
 private val model = Model(
     id = ModelId("666"),
     lock = ModelLock("123-234-abc-ABC"),
+    requestUserId = UserId("user"),
     name = "name 666",
     macroPath = "macro/path/666",
     solverPath = "solver/path/666",
@@ -23,6 +24,9 @@ private val model = Model(
         )
     ),
     visibility = Visibility.VISIBLE_PUBLIC,
+    usVector = arrayOf(   1.0, 2.0, 3.0),
+    vtVector = arrayOf(   4.0, 5.0, 6.0),
+    paramValues = arrayOf(7.0),
 )
 
 fun validationIdCorrect(command: Command, processor: ModelProcessor) = runBizTest {
@@ -63,7 +67,7 @@ fun validationIdEmpty(command: Command, processor: ModelProcessor) = runBizTest 
         ),
     )
     processor.exec(ctx)
-    assertEquals(1, ctx.errors.size)
+    assertNotEquals(0, ctx.errors.size) // в предикте есть проверка на пыстые us и vt
     assertEquals(State.FAILING, ctx.state)
     assertEquals("id", ctx.errors.firstOrNull()?.field)
 }
@@ -79,7 +83,7 @@ fun validationIdFormat(command: Command, processor: ModelProcessor) = runBizTest
         ),
     )
     processor.exec(ctx)
-    assertEquals(1, ctx.errors.size)
+    assertNotEquals(0, ctx.errors.size) // в предикте есть проверка на пыстые us и vt
     assertEquals(State.FAILING, ctx.state)
     assertEquals("id", ctx.errors.firstOrNull()?.field)
 }

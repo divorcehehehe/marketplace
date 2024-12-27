@@ -17,14 +17,20 @@ fun Throwable.asError(
     exception = this,
 )
 
-inline fun Context.addError(error: ROMError) = errors.add(error)
+fun Context.addError(error: ROMError) = errors.add(error)
+fun Context.addErrors(error_collection: Collection<ROMError>) = errors.addAll(error_collection)
 
-inline fun Context.fail(error: ROMError) {
+fun Context.fail(error: ROMError) {
     addError(error)
     state = State.FAILING
 }
 
-inline fun errorValidation(
+fun Context.fail(errors: Collection<ROMError>) {
+    addErrors(errors)
+    state = State.FAILING
+}
+
+fun errorValidation(
     field: String,
     /**
      * Код, характеризующий ошибку. Не должен включать имя поля или указание на валидацию.
@@ -39,4 +45,16 @@ inline fun errorValidation(
     group = "validation",
     message = "Validation error for field $field: $description",
     level = level,
+)
+
+fun errorSystem(
+    violationCode: String,
+    level: LogLevel = LogLevel.ERROR,
+    e: Throwable,
+) = ROMError(
+    code = "system-$violationCode",
+    group = "system",
+    message = "System error occurred. Our stuff has been informed, please retry later",
+    level = level,
+    exception = e,
 )

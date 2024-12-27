@@ -74,7 +74,6 @@ private fun Model.toTransportModel(): ModelResponseObject = ModelResponseObject(
     id = id.takeIf { it != ModelId.NONE }?.asString(),
     ownerId = ownerId.takeIf { it != UserId.NONE }?.asString(),
     lock = lock.takeIf { it != ModelLock.NONE }?.asString(),
-    permissions = permissionsClient.toTransportModel(),
     field = field.takeIf { it.isNotEmpty() }?.toList(),
     name = name.takeIf { it.isNotBlank() },
     macroPath = macroPath.takeIf { it.isNotBlank() },
@@ -101,46 +100,31 @@ private fun Param.toTransportParam(): ParamResponseObject = ParamResponseObject(
     modelId = modelId.takeIf { it != ModelId.NONE }?.asString()
 )
 
-private fun Sampling.toTransportModel() = when (this) {
+internal fun Sampling.toTransportModel() = when (this) {
     Sampling.LATIN_HYPER_CUBE -> ModelSampling.LATIN_HYPER_CUBE
     Sampling.ADAPTIVE_SAMPLING -> ModelSampling.ADAPTIVE_SAMPLING
     Sampling.NONE -> null
 }
 
-private fun Set<ModelPermissionClient>.toTransportModel(): Set<ModelPermissions>? = this
-    .map { it.toTransportModel() }
-    .toSet()
-    .takeIf { it.isNotEmpty() }
-
-private fun ModelPermissionClient.toTransportModel() = when (this) {
-    ModelPermissionClient.READ -> ModelPermissions.READ
-    ModelPermissionClient.UPDATE -> ModelPermissions.UPDATE
-    ModelPermissionClient.DELETE -> ModelPermissions.DELETE
-    ModelPermissionClient.MAKE_VISIBLE_PUBLIC -> ModelPermissions.MAKE_VISIBLE_PUBLIC
-    ModelPermissionClient.MAKE_VISIBLE_OWNER -> ModelPermissions.MAKE_VISIBLE_OWN
-    ModelPermissionClient.MAKE_VISIBLE_GROUP -> ModelPermissions.MAKE_VISIBLE_GROUP
-}
-
-private fun Visibility.toTransportModel(): ModelVisibility? = when (this) {
+internal fun Visibility.toTransportModel(): ModelVisibility? = when (this) {
     Visibility.VISIBLE_PUBLIC -> ModelVisibility.PUBLIC
-    Visibility.VISIBLE_TO_GROUP -> ModelVisibility.REGISTERED_ONLY
     Visibility.VISIBLE_TO_OWNER -> ModelVisibility.OWNER_ONLY
     Visibility.NONE -> null
 }
 
-private fun List<ROMError>.toTransportErrors(): List<Error>? = this
+internal fun List<ROMError>.toTransportErrors(): List<Error>? = this
     .map { it.toTransportModel() }
     .toList()
     .takeIf { it.isNotEmpty() }
 
-private fun ROMError.toTransportModel() = Error(
+internal fun ROMError.toTransportModel() = Error(
     code = code.takeIf { it.isNotBlank() },
     group = group.takeIf { it.isNotBlank() },
     field = field.takeIf { it.isNotBlank() },
     message = message.takeIf { it.isNotBlank() },
 )
 
-private fun State.toResult(): ResponseResult? = when (this) {
+internal fun State.toResult(): ResponseResult? = when (this) {
     State.RUNNING -> ResponseResult.SUCCESS
     State.FAILING -> ResponseResult.ERROR
     State.FINISHING -> ResponseResult.SUCCESS
