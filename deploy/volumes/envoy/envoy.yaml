@@ -26,9 +26,9 @@ static_resources:
                     routes:
                       - match: { path: "/" }
                         route: { cluster: app }
-                      - match: { prefix: "/v1/parts/" }
+                      - match: { prefix: "/v1/models/" }
                         route: { cluster: app }
-                      - match: { prefix: "/v2/parts/" }
+                      - match: { prefix: "/v2/models/" }
                         route: { cluster: app }
                       - match: { prefix: "/realms/" }
                         route: { cluster: keycloak }
@@ -52,9 +52,9 @@ static_resources:
                         forward: true
                         forward_payload_header: x-jwt-payload
                     rules:
-                      - match: { prefix: /v1/parts/ }
+                      - match: { prefix: /v1/models/ }
                         requires: { provider_name: keycloak_provider }
-                      - match: { prefix: /v2/parts/ }
+                      - match: { prefix: /v2/models/ }
                         requires: { provider_name: keycloak_provider }
                 - name: envoy.filters.http.router
                   typed_config:
