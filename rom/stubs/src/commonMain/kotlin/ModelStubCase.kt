@@ -6,15 +6,9 @@ object ModelStubCase {
     val MODEL_STUB_CASE: Model
         get() = Model(
             id = ModelId("666"),
-            ownerId = UserId("user-1"),
-            permissionsClient = mutableSetOf(
-                ModelPermissionClient.READ,
-                ModelPermissionClient.UPDATE,
-                ModelPermissionClient.DELETE,
-                ModelPermissionClient.MAKE_VISIBLE_PUBLIC,
-                ModelPermissionClient.MAKE_VISIBLE_GROUP,
-                ModelPermissionClient.MAKE_VISIBLE_OWNER,
-            ),
+            lock = ModelLock("123-234-abc-ABC"),
+            ownerId = UserId("user"),
+            requestUserId = UserId("user"),
             name = "Обтекание крыла",
             macroPath = "путь/к/макросу",
             solverPath = "путь/к/солверу",
@@ -26,10 +20,10 @@ object ModelStubCase {
                     name = "Скорость",
                     units = "м/с",
                     bounds = mutableListOf(100.0, 200.0),
-                    paramId = ParamId("1"),
-                    modelId = ModelId("666"),
                 )
             ),
+            usVector = arrayOf(9.0, 9.0, 9.0),
+            vtVector = arrayOf(9.0, 9.0, 9.0),
             sampling = Sampling.ADAPTIVE_SAMPLING,
             visibility = Visibility.VISIBLE_PUBLIC,
         )

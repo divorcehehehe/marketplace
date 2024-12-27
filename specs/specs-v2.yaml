@@ -6,7 +6,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/v1
+  - url: http://localhost:8080/v2
 tags:
   - name: model
 paths:
@@ -291,12 +291,15 @@ components:
       description: 'Тип видимости модели. Возможные значения: видит только владелец, только зарегистрированный в системе пользователь, видима всем'
       enum:
         - ownerOnly
-        - registeredOnly
         - public
 
     ModelCreateObject:
       allOf:
         - $ref: '#/components/schemas/BaseModel'
+        - type: object
+          properties:
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
 
     ModelCreateRequest:
       allOf:
@@ -304,8 +307,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelCreateObject'
 
@@ -315,6 +316,8 @@ components:
           properties:
             id:
               $ref: '#/components/schemas/ModelId'
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
 
     ModelReadRequest:
       allOf:
@@ -322,8 +325,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelReadObject'
 
@@ -336,6 +337,8 @@ components:
               $ref: '#/components/schemas/ModelId'
             lock:
               $ref: '#/components/schemas/ModelLock'
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
 
     ModelUpdateRequest:
       allOf:
@@ -343,8 +346,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelUpdateObject'
 
@@ -356,6 +357,8 @@ components:
               $ref: '#/components/schemas/ModelId'
             lock:
               $ref: '#/components/schemas/ModelLock'
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
 
     ModelDeleteRequest:
       allOf:
@@ -363,8 +366,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelDeleteObject'
 
@@ -375,6 +376,8 @@ components:
         searchString:
           type: string
           description: Поисковая строка, которая будет искаться среди имен моделей
+        requestUserId:
+          $ref: '#/components/schemas/UserId'
 
     ModelSearchRequest:
       allOf:
@@ -382,8 +385,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             modelFilter:
               $ref: '#/components/schemas/ModelSearchFilter'
 
@@ -395,6 +396,8 @@ components:
               $ref: '#/components/schemas/ModelId'
             lock:
               $ref: '#/components/schemas/ModelLock'
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
 
     ModelTrainRequest:
       allOf:
@@ -402,8 +405,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelTrainObject'
 
@@ -415,6 +416,8 @@ components:
               $ref: '#/components/schemas/ModelId'
             lock:
               $ref: '#/components/schemas/ModelLock'
+            requestUserId:
+              $ref: '#/components/schemas/UserId'
             paramValues:
               type: array
               items:
@@ -427,8 +430,6 @@ components:
         - $ref: '#/components/schemas/ModelRequestDebug'
         - type: object
           properties:
-            requestUserId:
-              $ref: '#/components/schemas/UserId'
             model:
               $ref: '#/components/schemas/ModelPredictObject'
 
@@ -454,11 +455,6 @@ components:
               $ref: '#/components/schemas/UserId'
             lock:
               $ref: '#/components/schemas/ModelLock'
-            permissions:
-              type: array
-              uniqueItems: true
-              items:
-                $ref: '#/components/schemas/ModelPermissions'
             field:
               type: array
               items:
@@ -487,17 +483,6 @@ components:
               items:
                 type: number
                 format: double
-
-    ModelPermissions:
-      type: string
-      description: Доступы для клиента для операций над объявлением
-      enum:
-        - read
-        - update
-        - delete
-        - makeVisiblePublic
-        - makeVisibleOwn
-        - makeVisibleGroup
 
     ModelResponseSingle:
       allOf:

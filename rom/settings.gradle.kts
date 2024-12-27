@@ -39,3 +39,10 @@ include(":app-common")
 include(":app-tmp")
 include(":app-spring")
 include(":app-rabbit")
+
+// DB
+include(":repo-common")
+include(":repo-inmemory")
+include(":repo-postgres")
+include(":repo-tests")
+include(":repo-stubs")

@@ -11,7 +11,10 @@ fun validationSearchStringCorrect(processor: ModelProcessor) = runBizTest {
         command = Command.SEARCH,
         state = State.NONE,
         workMode = WorkMode.TEST,
-        modelFilterRequest = ModelFilter(searchString = "search"),
+        modelFilterRequest = ModelFilter(
+            requestUserId = UserId("user"),
+            searchString = "search",
+        ),
     )
     processor.exec(ctx)
     assertEquals(0, ctx.errors.size)
@@ -25,7 +28,8 @@ fun validationSearchStringTrim(processor: ModelProcessor) = runBizTest {
         state = State.NONE,
         workMode = WorkMode.TEST,
         modelFilterRequest = ModelFilter(
-            searchString = " \n\t search \n\t "
+            requestUserId = UserId("user"),
+            searchString = " \n\t search \n\t ",
         ),
     )
     processor.exec(ctx)
@@ -40,7 +44,8 @@ fun validationSearchStringTooSmall(processor: ModelProcessor) = runBizTest {
         state = State.NONE,
         workMode = WorkMode.TEST,
         modelFilterRequest = ModelFilter(
-            searchString = "se"
+            requestUserId = UserId("user"),
+            searchString = "se",
         ),
     )
     processor.exec(ctx)
@@ -55,7 +60,8 @@ fun validationSearchStringTooLong(processor: ModelProcessor) = runBizTest {
         state = State.NONE,
         workMode = WorkMode.TEST,
         modelFilterRequest = ModelFilter(
-            searchString = "search".repeat(20)
+            requestUserId = UserId("user"),
+            searchString = "search".repeat(20),
         ),
     )
     processor.exec(ctx)

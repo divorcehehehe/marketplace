@@ -9,7 +9,7 @@ fun ICorChainDsl<Context>.finishModelValidation(title: String) = worker {
     this.title = title
     on { state == State.RUNNING }
     handle {
-        modelValidated = modelValidating.deepCopy()
+        modelValidated = modelValidating.copy()
     }
 }
 
@@ -17,6 +17,6 @@ fun ICorChainDsl<Context>.finishModelFilterValidation(title: String) = worker {
     this.title = title
     on { state == State.RUNNING }
     handle {
-        modelFilterValidated = modelFilterValidating.deepCopy()
+        modelFilterValidated = modelFilterValidating.copy()
     }
 }

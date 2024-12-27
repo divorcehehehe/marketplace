@@ -9,6 +9,7 @@ import kotlin.test.assertNotEquals
 private val model = Model(
     id = ModelId("666"),
     lock = ModelLock("123-234-abc-ABC"),
+    requestUserId = UserId("user"),
     name = "name 666",
     macroPath = "macro/path/666",
     solverPath = "solver/path/666",

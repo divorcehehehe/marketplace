@@ -17,8 +17,8 @@ class MapperTrainTest {
             ),
             model = ModelTrainObject(
                 id = "model_id",
+                requestUserId = "user_id",
             ),
-            requestUserId = "user_id"
         )
 
         val context = Context()
@@ -36,7 +36,7 @@ class MapperTrainTest {
         assertEquals(null,       context.modelRequest.params.firstOrNull())
         assertEquals("NONE",     context.modelRequest.sampling.name)
         assertEquals("NONE",     context.modelRequest.visibility.name)
-        assertEquals("user_id",  context.requestUserId.asString())
+        assertEquals("user_id",  context.modelRequest.requestUserId.asString())
     }
 
     @Test
@@ -59,7 +59,7 @@ class MapperTrainTest {
         assertEquals(null,    context.modelRequest.params.firstOrNull())
         assertEquals("NONE",  context.modelRequest.sampling.name)
         assertEquals("NONE",  context.modelRequest.visibility.name)
-        assertEquals("",      context.requestUserId.asString())
+        assertEquals("",      context.modelRequest.requestUserId.asString())
     }
 
     @Test
@@ -80,7 +80,6 @@ class MapperTrainTest {
                 id = ModelId("model_id"),
                 ownerId = UserId("owner_id"),
                 lock = ModelLock("model_lock"),
-                permissionsClient = mutableSetOf(ModelPermissionClient.DELETE),
                 name = "model",
                 macroPath = "path/to/macro",
                 solverPath = "path/to/solver",
@@ -111,7 +110,6 @@ class MapperTrainTest {
         assertEquals("model_id",         request.model?.id)
         assertEquals("owner_id",         request.model?.ownerId)
         assertEquals("model_lock",       request.model?.lock)
-        assertEquals("delete",           request.model?.permissions?.firstOrNull()?.value)
         assertEquals(null,               request.model?.field)
         assertEquals("model",            request.model?.name)
         assertEquals("path/to/macro",    request.model?.macroPath)
@@ -153,7 +151,6 @@ class MapperTrainTest {
         assertEquals(null,    request.model?.id)
         assertEquals(null,    request.model?.ownerId)
         assertEquals(null,    request.model?.lock)
-        assertEquals(null,    request.model?.permissions)
         assertEquals(null,    request.model?.field)
         assertEquals(null,    request.model?.name)
         assertEquals(null,    request.model?.macroPath)

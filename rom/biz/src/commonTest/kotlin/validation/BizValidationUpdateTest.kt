@@ -16,6 +16,11 @@ class BizValidationUpdateTest: BaseBizValidationTest() {
     @Test fun emptyLock() = validationLockEmpty(command, processor)
     @Test fun badFormatLock() = validationLockFormat(command, processor)
 
+    @Test fun correctRequestUserId() = validationRequestUserIdCorrect(command, processor)
+    @Test fun trimRequestUserId() = validationRequestUserIdTrim(command, processor)
+    @Test fun emptyRequestUserId() = validationRequestUserIdEmpty(command, processor)
+    @Test fun badFormatRequestUserId() = validationRequestUserIdFormat(command, processor)
+
     @Test fun correctName() = validationNameCorrect(command, processor)
     @Test fun trimName() = validationNameTrim(command, processor)
     @Test fun emptyName() = validationNameEmpty(command, processor)

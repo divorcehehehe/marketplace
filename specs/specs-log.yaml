@@ -77,11 +77,8 @@ components:
           type: string
         ownerId:
           type: string
-        permissions:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
+        requestUserId:
+          type: string
         field:
           type: array
           items:
@@ -137,5 +134,5 @@ components:
       properties:
         searchString:
           type: string
-        ownerId:
+        requestUserId:
           type: string

@@ -12,6 +12,7 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
 
                 api(libs.kotlinx.datetime)
+                implementation(libs.coroutines.core)
                 api("marketplace.libs:lib-logging-common")
             }
         }

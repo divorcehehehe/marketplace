@@ -11,6 +11,11 @@ class BizValidationDeleteTest: BaseBizValidationTest() {
     @Test fun emptyId() = validationIdEmpty(command, processor)
     @Test fun badFormatId() = validationIdFormat(command, processor)
 
+    @Test fun correctRequestUserId() = validationRequestUserIdCorrect(command, processor)
+    @Test fun trimRequestUserId() = validationRequestUserIdTrim(command, processor)
+    @Test fun emptyRequestUserId() = validationRequestUserIdEmpty(command, processor)
+    @Test fun badFormatRequestUserId() = validationRequestUserIdFormat(command, processor)
+
     @Test fun correctLock() = validationLockCorrect(command, processor)
     @Test fun trimLock() = validationLockTrim(command, processor)
     @Test fun emptyLock() = validationLockEmpty(command, processor)

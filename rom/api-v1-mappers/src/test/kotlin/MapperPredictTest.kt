@@ -18,8 +18,8 @@ class MapperPredictTest {
             model = ModelPredictObject(
                 id = "model_id",
                 paramValues = listOf(30.0),
+                requestUserId = "user_id",
             ),
-            requestUserId = "user_id",
         )
 
         val context = Context()
@@ -38,7 +38,7 @@ class MapperPredictTest {
         assertEquals("NONE",     context.modelRequest.sampling.name)
         assertEquals("NONE",     context.modelRequest.visibility.name)
         assertEquals(30.0,       context.modelRequest.paramValues.firstOrNull())
-        assertEquals("user_id",  context.requestUserId.asString())
+        assertEquals("user_id",  context.modelRequest.requestUserId.asString())
     }
 
     @Test
@@ -61,7 +61,7 @@ class MapperPredictTest {
         assertEquals("NONE",    context.modelRequest.sampling.name)
         assertEquals("NONE",    context.modelRequest.visibility.name)
         assertEquals(null,      context.modelRequest.paramValues.firstOrNull())
-        assertEquals("",        context.requestUserId.asString())
+        assertEquals("",        context.modelRequest.requestUserId.asString())
     }
 
     @Test
@@ -82,7 +82,6 @@ class MapperPredictTest {
                 id = ModelId("model_id"),
                 ownerId = UserId("owner_id"),
                 lock = ModelLock("model_lock"),
-                permissionsClient = mutableSetOf(ModelPermissionClient.DELETE),
                 field = arrayOf(0.0, 1.0, 2.0, 3.0, 4.0, 5.0),
                 name = "model",
                 macroPath = "path/to/macro",
@@ -115,7 +114,6 @@ class MapperPredictTest {
         assertEquals("model_id",         request.model?.id)
         assertEquals("owner_id",         request.model?.ownerId)
         assertEquals("model_lock",       request.model?.lock)
-        assertEquals("delete",           request.model?.permissions?.firstOrNull()?.value)
         assertEquals(5.0,                request.model?.field?.lastOrNull())
         assertEquals("model",            request.model?.name)
         assertEquals("path/to/macro",    request.model?.macroPath)
@@ -158,7 +156,6 @@ class MapperPredictTest {
         assertEquals(null,      request.model?.id)
         assertEquals(null,      request.model?.ownerId)
         assertEquals(null,      request.model?.lock)
-        assertEquals(null,      request.model?.permissions)
         assertEquals(null,      request.model?.field)
         assertEquals(null,      request.model?.name)
         assertEquals(null,      request.model?.macroPath)
